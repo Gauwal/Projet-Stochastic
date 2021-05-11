@@ -100,7 +100,8 @@ for i in range(0,k):
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
-    print(x1[2])
+ 
+plt.plot(x1) 
 
         
       
