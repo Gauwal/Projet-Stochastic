@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat May  8 14:27:27 2021
-
-@author: Arthur Gengler
-"""
-
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -64,8 +57,8 @@ def P_tilde(A,Q,Pprev):
 
 #Kk = P˜kCT(CP˜kCT + R)−1
 def K_k(Ptilde,C,R):
-    abc=1/(np.dot(np.dot(C,Ptilde),np.transpose(C))+R)
-    return np.dot(Ptilde,np.transpose(C))*abc
+    
+    return np.dot(Ptilde,np.transpose(C))/(np.dot(np.dot(C,Ptilde),np.transpose(C))+R)
 
 #Calcul mu_k
 def mu_k(mutilde,Kk,yk,C):
@@ -100,11 +93,10 @@ for i in range(0,k):
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
- 
-plt.plot(x1) 
 
         
-      
+plt.plot(x1) 
+plt.show()
         
         
         
