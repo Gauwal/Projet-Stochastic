@@ -10,6 +10,9 @@ import random
 import matplotlib.pyplot as plt
 import math 
 
+
+
+
 #Lecture de u 
 file1 = open('Input_linear_case.txt', "r")
 lines = file1.readlines()
