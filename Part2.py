@@ -204,7 +204,6 @@ for j in range(0,1000):
         xtilde=A@x_hat_prev+B*ucurrent   
         ytilde=C@xtilde
         Ptildeapprox=np.cov(xtilde)
-        print(Ptildeapprox)
         Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
         x_hat=xtilde+Kkapprox*(yk-ytilde)
         x1_hat_vect[i][0]=x_hat[0]
