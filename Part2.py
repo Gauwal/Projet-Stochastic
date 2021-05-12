@@ -126,16 +126,15 @@ for i in range(0,k):
         mutilde=mu_tilde(A,B,mukprev,ucurrent)
         Ptilde=P_tilde(A,Q,Pprev)
         Kk=K_k(Ptilde,C,R)
-        print(Kk)
+
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
  
 plt.figure(3)
-plt.plot(x1) 
-
         
-plt.plot(x1) 
+plt.plot(x1)
+
 plt.show()
         
         
