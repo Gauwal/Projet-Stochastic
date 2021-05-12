@@ -39,20 +39,50 @@ for line in lines:
     i+=1
 file2.close()
 
+#x1_true
+file3 = open('True_state_x1_linear_case.txt', "r")
+lines = file3.readlines()
+i=0
+x1_true=np.zeros(len(lines)-1)
+for line in lines:
+    if(i==0):
+        pass
+    else:
+        x1_true[i-1]=float(line.strip().split(" ")[0])
+    i+=1
+file3.close()
+plt.figure(1)
+plt.plot(x1_true)
+#x2_true
+file4 = open('True_state_x1_linear_case.txt', "r")
+lines = file4.readlines()
+i=0
+x2_true=np.zeros(len(lines)-1)
+for line in lines:
+    if(i==0):
+        pass
+    else:
+        x2_true[i-1]=float(line.strip().split(" ")[0])
+    i+=1
+file4.close()
+plt.figure(2)
+plt.plot(x2_true)
+
+
 #Matrice of Kalman filter
-A=[[0.9512,0],[0.0476,0.9512]]
-B=[0.0975,0.0024]
-C=[0,1]
+A=np.array([[0.9512,0],[0.0476,0.9512]])
+B=np.array([0.0975,0.0024])
+C=np.array([0,1])
+C.shape=(1,2)
 
 
-Q=[[10**(-3)*9.506,10**(-3)*0.0234],[10**(-3)*0.234,10**(-3)*9.512]]
+Q=np.array([[10**(-3)*9.506,10**(-3)*0.0234],[10**(-3)*0.234,10**(-3)*9.512]])
 R=0.0125
 
 #x(-1)
-mu_x_init=[5,5]
-Cov_x_init=[[1,0],[0,1]]
-
-Inx=[[1,0],[0,1]]
+mu_x_init=np.array([5,5])
+Cov_x_init=np.array([[1,0],[0,1]])
+Inx=np.array([[1,0],[0,1]])
 
 #titde (µ_k )= Aµk−1 + Buk
 def mu_tilde(A,B,mukprev,ucurrent):
@@ -65,15 +95,15 @@ def P_tilde(A,Q,Pprev):
 #Kk = P˜kCT(CP˜kCT + R)−1
 def K_k(Ptilde,C,R):
     abc=1/(np.dot(np.dot(C,Ptilde),np.transpose(C))+R)
-    return np.dot(Ptilde,np.transpose(C))*abc
+    return np.dot(Ptilde,np.transpose(C))*abc 
 
 #Calcul mu_k
 def mu_k(mutilde,Kk,yk,C):
-    return mutilde+Kk*(yk-np.dot(C,mutilde))
+    return mutilde+np.dot(Kk,(yk-np.dot(C,mutilde)))
 
 #Pk = (Inx − KkC)P˜k
 def P_k(Inx,Kk,C,Ptilde):
-    return np.dot(Inx-Kk*C,Ptilde)
+    return np.dot(Inx-np.dot(Kk,C),Ptilde)
 
 k=len(y)
 x1=np.zeros(len(y))
@@ -97,10 +127,12 @@ for i in range(0,k):
         mutilde=mu_tilde(A,B,mukprev,ucurrent)
         Ptilde=P_tilde(A,Q,Pprev)
         Kk=K_k(Ptilde,C,R)
+        print(Kk)
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
  
+plt.figure(3)
 plt.plot(x1) 
 
         
