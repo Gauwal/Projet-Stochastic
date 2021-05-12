@@ -120,6 +120,7 @@ for i in range(0,k):
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
+        x2[i]=np.random.normal(muk[1],Pk[1][1])
     else:
         mukprev=muk
         Pprev=Pk
@@ -130,13 +131,12 @@ for i in range(0,k):
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
+        x2[i]=np.random.normal(muk[1],Pk[1][1])
  
 plt.figure(3)
 plt.plot(x1) 
-
-        
-plt.plot(x1) 
-plt.show()
+plt.figure(4)
+plt.plot(x2) 
         
         
         
