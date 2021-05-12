@@ -173,27 +173,40 @@ def K_k_approx(Papprox,C,R):
 N=3
 x1_hat_prev=np.array(np.zeros((N,1)))
 x2_hat_prev=np.array(np.zeros((N,1)))
-
+x1_hat_vect=np.array(np.zeros((N,1)))
 print("x1_hat_prev",x1_hat_prev.shape)
 for j in range(0,1000):
+    ucurrent=u[i]
+    yk=y[i]
     for i in range(0,N):
+
         if j==0:
             x1_hat_prev[i][0]=np.random.normal(mu_x_init[0],Cov_x_init[0][0])
             x2_hat_prev[i][0]=np.random.normal(mu_x_init[1],Cov_x_init[1][1])
         else:
             x1_hat_prev[i][0]=4
             x2_hat_prev[i][0]=4
-            
-    print("x1_hat_prev",x1_hat_prev.shape)
-    x_hat_prev=np.array([[x1_hat_prev],[x2_hat_prev]])
-    x_hat_prev.shape=(2,1,3)
-    print("x_hat_prev",x_hat_prev.shape)
-    print("x_hat_prev",x_hat_prev)    
-    xtilde=A@x_hat_prev+B@u    #+bruit
-    ytilde=C@xtilde            #+bruit
-    Ptildeapprox=np.cov(xtilde)
-    Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
-    x_hat=xtilde+Kkapprox*(yk-ytilde)
+    
+        x_hat_prev=np.array([x1_hat_prev[i][0],x2_hat_prev[i][0]])
+        x_hat_prev.shape=(2,1)
+        xtilde=A@x_hat_prev+B*ucurrent   
+        ytilde=C@xtilde
+        Ptildeapprox=np.cov(xtilde)
+        print(Ptildeapprox)
+        Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
+        x_hat=xtilde+Kkapprox*(yk-ytilde)
+        x1_hat_vect[i][0]=x_hat[0]
+        
+    #print("x1_hat_prev",x1_hat_prev.shape)
+    #x_hat_prev=np.array([[x1_hat_prev],[x2_hat_prev]])
+    #x_hat_prev.shape=(2,1,3)
+    #print("x_hat_prev",x_hat_prev.shape)
+    #print("x_hat_prev",x_hat_prev)    
+    #xtilde=A@x_hat_prev+B@u    #+bruit
+    #ytilde=C@xtilde            #+bruit
+    #Ptildeapprox=np.cov(xtilde)
+    #Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
+    #x_hat=xtilde+Kkapprox*(yk-ytilde)
     
     
     
