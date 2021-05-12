@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat May  8 14:27:27 2021
-
-@author: Arthur Gengler
-"""
-
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -136,7 +129,8 @@ plt.figure(3)
 plt.plot(x1) 
 
         
-      
+plt.plot(x1) 
+plt.show()
         
         
         
