@@ -64,18 +64,24 @@ plt.plot(x2_true)
 
 #Matrice of Kalman filter
 A=np.array([[0.9512,0],[0.0476,0.9512]])
+A.shape=(2,2)
 B=np.array([0.0975,0.0024])
+B.shape=(2,1)
 C=np.array([0,1])
 C.shape=(1,2)
 
 
 Q=np.array([[10**(-3)*9.506,10**(-3)*0.0234],[10**(-3)*0.234,10**(-3)*9.512]])
-R=0.0125
+Q.shape=(2,2)
+R=np.array(0.0125)
 
 #x(-1)
 mu_x_init=np.array([5,5])
+mu_x_init.shape=(2,1)
 Cov_x_init=np.array([[1,0],[0,1]])
+Cov_x_init.shape=(2,2)
 Inx=np.array([[1,0],[0,1]])
+Inx.shape=(2,2)
 
 #titde (µ_k )= Aµk−1 + Buk
 def mu_tilde(A,B,mukprev,ucurrent):
