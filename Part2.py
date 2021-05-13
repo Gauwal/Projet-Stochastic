@@ -155,7 +155,7 @@ for i in range(0,k):
 a=False
 
 Linewdth = 1
-fig, axis = plt.subplots(1, 4)
+fig, axis = plt.subplots(1, 4,figsize=(20, 5))
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
 axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
@@ -333,7 +333,7 @@ if(Q2):
 
 
 Linewdth = 1
-fig, axis = plt.subplots(1, 4)
+fig, axis = plt.subplots(1, 4,figsize=(20, 5))
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
 axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
@@ -474,7 +474,7 @@ for j in range(0,k):
 
 
 Linewdth = 1
-fig, axis = plt.subplots(1, 4)
+fig, axis = plt.subplots(1, 4,figsize=(20, 5))
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
 axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
