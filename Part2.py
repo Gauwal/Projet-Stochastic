@@ -159,7 +159,7 @@ fig, axis = plt.subplots(1, 4)
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
 axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
-#axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
 axis[0].legend()
 axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
@@ -172,7 +172,7 @@ axis[0].set_title("X1 Kf")
 axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
 axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
 axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
-#axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
 axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
 axis[1].legend()
 axis[1].set_aspect(1.0/axis[1].get_data_ratio(), adjustable='box')
@@ -236,7 +236,7 @@ x1_hat=np.zeros(len(y))
 x2_hat=np.zeros(len(y))
 
 x1rmdsmoy=np.zeros(k)
-
+x2rmdsmoy=np.zeros(k)
 for j in range(0,k):
     ucurrent=u[j]
     yk=y[j]
@@ -287,15 +287,17 @@ for j in range(0,k):
     for i in range(0,N):
         x1rmds[i]=(x_hat[i][0][0]-x1_true[j])
     x1rmdsmoy[j]=np.mean([(x1rmds[i]) for i in range(0,N)])
+    x2rmds=np.zeros(N)
+    for i in range(0,N):
+        x2rmds[i]=(x_hat[i][1][0]-x2_true[j])
+    x2rmdsmoy[j]=np.mean([(x2rmds[i]) for i in range(0,N)])
 
     x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
     x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
     x2sigmaplus[j]=x2_hat[j]+1.96*(Ptildeapprox[1][1])**(1/2)
     x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
 
-plt.plot(x1rmdsmoy)
-plt.title("EnKF RMSD q1")
-plt.show()
+
 
 Q1=False
 if(Q1):    
@@ -357,8 +359,8 @@ axis[1].set_ylabel('Height [m]')
 axis[1].set_title("X2 linear EnKf")
   
 
-axis[2].plot(x1rmds,color="blue",label="RMSD x1", linewidth=Linewdth)
-axis[2].plot(x2rmds,color="red",label="RMSD x2", linewidth=Linewdth)
+axis[2].plot(np.arange(0,1000,1)*h,x1rmdsmoy,color="blue",label="RMSD x1", linewidth=Linewdth)
+axis[2].plot(np.arange(0,1000,1)*h,x2rmdsmoy,color="red",label="RMSD x2", linewidth=Linewdth)
 axis[2].legend()
 axis[2].set_aspect(1.0/axis[2].get_data_ratio(), adjustable='box')
 axis[2].set_xlabel('Time [s]')
@@ -391,7 +393,7 @@ uprev=u[0]
 
 
 x1rmdsmoy=np.zeros(k)
-
+x2rmdsmoy=np.zeros(k)
 for j in range(0,k):
     if j>0 :
         uprev=u[j-1]
@@ -453,6 +455,10 @@ for j in range(0,k):
     for i in range(0,N):
         x1rmds[i]=(x_hat[i][0][0]-x1_true[j])
     x1rmdsmoy[j]=np.mean([(x1rmds[i]) for i in range(0,N)])
+    x2rmds=np.zeros(N)
+    for i in range(0,N):
+        x2rmds[i]=(x_hat[i][1][0]-x2_true[j])
+    x2rmdsmoy[j]=np.mean([(x2rmds[i]) for i in range(0,N)])
     
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
@@ -464,9 +470,7 @@ for j in range(0,k):
     x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
     
     
-plt.plot(x1rmdsmoy)
-plt.title("EnKF RMSD q2")
-plt.show()
+
 
 
 Linewdth = 1
@@ -496,8 +500,8 @@ axis[1].set_ylabel('Height [m]')
 axis[1].set_title("X2 non-linear EnKf")
   
 
-axis[2].plot(x1rmds,color="blue",label="RMSD x1", linewidth=Linewdth)
-axis[2].plot(x2rmds,color="red",label="RMSD x2", linewidth=Linewdth)
+axis[2].plot(np.arange(0,1000,1)*h,x1rmdsmoy,color="blue",label="RMSD x1", linewidth=Linewdth)
+axis[2].plot(np.arange(0,1000,1)*h,x2rmdsmoy,color="red",label="RMSD x2", linewidth=Linewdth)
 axis[2].legend()
 axis[2].set_aspect(1.0/axis[2].get_data_ratio(), adjustable='box')
 axis[2].set_xlabel('Time [s]')
