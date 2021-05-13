@@ -235,6 +235,8 @@ x_hat=np.array(np.zeros((N,2,1)))
 x1_hat=np.zeros(len(y))
 x2_hat=np.zeros(len(y))
 
+x1rmdsmoy=np.zeros(k)
+
 for j in range(0,k):
     ucurrent=u[j]
     yk=y[j]
@@ -281,13 +283,19 @@ for j in range(0,k):
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
+    x1rmds=np.zeros(N)
+    for i in range(0,N):
+        x1rmds[i]=(x_hat[i][0][0]-x1_true[j])
+    x1rmdsmoy[j]=np.mean([(x1rmds[i]) for i in range(0,N)])
 
     x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
     x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
     x2sigmaplus[j]=x2_hat[j]+1.96*(Ptildeapprox[1][1])**(1/2)
     x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
 
-
+plt.plot(x1rmdsmoy)
+plt.title("EnKF RMSD q1")
+plt.show()
 
 Q1=False
 if(Q1):    
@@ -381,6 +389,9 @@ def f(xk,uk,ind):
 
 uprev=u[0]
 
+
+x1rmdsmoy=np.zeros(k)
+
 for j in range(0,k):
     if j>0 :
         uprev=u[j-1]
@@ -435,8 +446,17 @@ for j in range(0,k):
     for i in range(0,N):
         x_hat[i][:][:]=xtilde[i][:][:]+Kkapprox*(yk-ytilde[i][:])
         #print("hat",x_hat[i][:][:],"i",i)
+        
+        
+        
+    x1rmds=np.zeros(N)
+    for i in range(0,N):
+        x1rmds[i]=(x_hat[i][0][0]-x1_true[j])
+    x1rmdsmoy[j]=np.mean([(x1rmds[i]) for i in range(0,N)])
+    
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
+    
 
     x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
     x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
@@ -444,7 +464,11 @@ for j in range(0,k):
     x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
     
     
-    
+plt.plot(x1rmdsmoy)
+plt.title("EnKF RMSD q2")
+plt.show()
+
+
 Linewdth = 1
 fig, axis = plt.subplots(1, 4)
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
