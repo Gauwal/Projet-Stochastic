@@ -104,6 +104,9 @@ k=len(y)
 x1=np.zeros(len(y))
 x2=np.zeros(len(y))
 
+x1sigmaplus=np.zeros(len(y))
+x1sigmamoins=np.zeros(len(y))
+
 for i in range(0,k):
     ucurrent=u[i]
     yk=y[i]
@@ -119,7 +122,9 @@ for i in range(0,k):
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
+        
         x2[i]=np.random.normal(muk[1],Pk[1][1])
+        
     else:
         mukprev=muk
         Pprev=Pk
@@ -130,29 +135,14 @@ for i in range(0,k):
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
         x2[i]=np.random.normal(muk[1],Pk[1][1])
- 
-
+    x1sigmaplus[i]=x1[i]+1.96*(Pk[0][0])**(1/2)
+    x1sigmamoins[i]=x1[i]-1.96*(Pk[0][0])**(1/2)
 
 
 
 #a=True
 a=False    
-if(a):    
-    plt.figure(1)
-    plt.title("X1 True values")
-    plt.plot(x1_true)
-    plt.figure(2)
-    plt.title("X2 True values")
-    plt.plot(x2_true)
-    plt.figure(3)
-    plt.title("X1 Filtered values")
-    plt.plot(x1) 
-    plt.figure(4)
-    plt.title("X2 Filtered values")
-    plt.plot(x2)
-    plt.figure(5)
-    plt.title("Y")
-    plt.plot(y)
+
 
 
 ###------EnKF------###
@@ -234,11 +224,38 @@ for j in range(0,k):
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
 
-plt.figure(6)
-plt.plot(x1_hat)
-plt.plot(x1)
-plt.figure(7)
-plt.plot(x2_hat)
+
+Q1=True
+if(Q1):    
+    plt.figure(1)
+    plt.title("X1 True values")
+    plt.plot(x1_true)
+    plt.figure(2)
+    plt.title("X2 True values")
+    plt.plot(x2_true)
+    plt.figure(3)
+    plt.title("X1 Filtered values")
+    plt.plot(x1) 
+    plt.figure(4)
+    plt.title("X2 Filtered values")
+    plt.plot(x2)
+    plt.figure(5)
+    plt.title("Y")
+    plt.plot(y)
+    plt.figure(6)
+    fig, ax = plt.subplots()
+    ab=np.arange(0,1000,1)
+    ax.plot(ab,x1)
+    ax.fill_between(ab,(x1sigmamoins), (x1sigmaplus), color='b', alpha=.1)
+Q2=True  
+if(Q2):   
+    plt.figure(7)
+    plt.plot(x1_hat)
+    plt.plot(x1)
+    plt.figure(8)
+    plt.plot(x2_hat)
+    plt.plot(x1)
+        
 
 plt.show()
 
@@ -272,6 +289,16 @@ for j in range(0,k):
         w1=np.random.normal(0,Q[0][0])
         w2=np.random.normal(0,Q[1][1])
         
+    #print("x1_hat_prev",x1_hat_prev.shape)
+    #x_hat_prev=np.array([[x1_hat_prev],[x2_hat_prev]])
+    #x_hat_prev.shape=(2,1,3)
+    #print("x_hat_prev",x_hat_prev.shape)
+    #print("x_hat_prev",x_hat_prev)    
+    #xtilde=A@x_hat_prev+B@u    #+bruit
+    #ytilde=C@xtilde            #+bruit
+    #Ptildeapprox=np.cov(xtilde)
+    #Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
+    #x_hat=xtilde+Kkapprox*(yk-ytilde)
         w=[[np.random.normal(0,Q[0][0])],[np.random.normal(0,Q[0][0])]]
         v=np.random.normal(0,0.0125)
         xtilde[i][:][:]=x_hat_prev+(h/6)*(f(x_hat_prev,uprev,1)+2*f(x_hat_prev,uprev,2)+2*f(x_hat_prev,uprev,3)+f(x_hat_prev,uprev,4))+w 
