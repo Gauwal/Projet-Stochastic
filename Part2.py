@@ -111,6 +111,7 @@ x1sigmaplus=np.zeros(len(y))
 x1sigmamoins=np.zeros(len(y))
 x2sigmaplus=np.zeros(len(y))
 x2sigmamoins=np.zeros(len(y))
+x1rmds=np.zeros(len(y))
 for i in range(0,k):
     ucurrent=u[i]
     yk=y[i]
@@ -143,7 +144,8 @@ for i in range(0,k):
     x1sigmamoins[i]=x1[i]-1.96*(Pk[0][0])**(1/2)
     x2sigmaplus[i]=x2[i]+1.96*(Pk[1][1])**(1/2)
     x2sigmamoins[i]=x2[i]-1.96*(Pk[1][1])**(1/2)
-
+    x1rmds[i]=((x1[i]-x1_true[i])**(2))**(1/2)
+plt.plot(x1rmds)
 
 
 #a=True
