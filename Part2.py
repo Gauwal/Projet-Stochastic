@@ -226,7 +226,7 @@ def K_k_approx(Papprox,C,R):
     
     
 
-N=3
+N=30
 x1_hat_prev=np.array(np.zeros((N,1)))
 x2_hat_prev=np.array(np.zeros((N,1)))
 xtilde=np.array(np.zeros((N,2,1)))
@@ -299,44 +299,14 @@ for j in range(0,k):
 
 
 
-Q1=False
-if(Q1):    
-    plt.figure(1)
-    plt.title("X1 True values")
-    plt.plot(x1_true)
-    plt.figure(2)
-    plt.title("X2 True values")
-    plt.plot(x2_true)
-    plt.figure(3)
-    plt.title("X1 Filtered values")
-    plt.plot(x1) 
-    plt.figure(4)
-    plt.title("X2 Filtered values")
-    plt.plot(x2)
-    plt.figure(5)
-    plt.title("Y")
-    plt.plot(y)
-    plt.figure(6)
-    fig, ax = plt.subplots()
-    ab=np.arange(0,1000,1)
-    ax.plot(ab,x1)
-    ax.fill_between(ab,(x1sigmamoins), (x1sigmaplus), color='b', alpha=.1)
 
-Q2=False  
-if(Q2):   
-    plt.figure(7)
-    plt.plot(x1_hat)
-    plt.plot(x1)
-    plt.figure(8)
-    plt.plot(x2_hat)
-    plt.plot(x1)
 
 
 Linewdth = 1
 fig, axis = plt.subplots(1, 4,figsize=(20, 5))
-axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
-axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
-axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
+#axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
+#axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
+#axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
 axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
 axis[0].legend()
@@ -347,9 +317,9 @@ axis[0].set_title("X1 linear EnKf")
   
 
 
-axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
-axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
-axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
+#axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
+#axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
+#axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
 axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
 axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
 axis[1].legend()
@@ -475,9 +445,9 @@ for j in range(0,k):
 
 Linewdth = 1
 fig, axis = plt.subplots(1, 4,figsize=(20, 5))
-axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
-axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
-axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
+#axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
+#axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
+#axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
 axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
 axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
 axis[0].legend()
@@ -488,9 +458,9 @@ axis[0].set_title("X1 non-linear EnKf")
   
 
 
-axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
-axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
-axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
+#axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
+#axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
+#axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
 axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
 axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
 axis[1].legend()
