@@ -106,7 +106,8 @@ x2=np.zeros(len(y))
 
 x1sigmaplus=np.zeros(len(y))
 x1sigmamoins=np.zeros(len(y))
-
+x2sigmaplus=np.zeros(len(y))
+x2sigmamoins=np.zeros(len(y))
 for i in range(0,k):
     ucurrent=u[i]
     yk=y[i]
@@ -137,6 +138,8 @@ for i in range(0,k):
         x2[i]=np.random.normal(muk[1],Pk[1][1])
     x1sigmaplus[i]=x1[i]+1.96*(Pk[0][0])**(1/2)
     x1sigmamoins[i]=x1[i]-1.96*(Pk[0][0])**(1/2)
+    x2sigmaplus[i]=x2[i]+1.96*(Pk[0][0])**(1/2)
+    x2sigmamoins[i]=x2[i]-1.96*(Pk[0][0])**(1/2)
 
 
 
@@ -224,8 +227,14 @@ for j in range(0,k):
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
 
+    #x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
+    #x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
+    #x2sigmaplus[j]=x2_hat[j]+1.96*(Ptildeapprox[1][1])**(1/2)
+    #x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
 
-Q1=True
+
+
+Q1=False
 if(Q1):    
     plt.figure(1)
     plt.title("X1 True values")
@@ -247,7 +256,8 @@ if(Q1):
     ab=np.arange(0,1000,1)
     ax.plot(ab,x1)
     ax.fill_between(ab,(x1sigmamoins), (x1sigmaplus), color='b', alpha=.1)
-Q2=True  
+
+Q2=False  
 if(Q2):   
     plt.figure(7)
     plt.plot(x1_hat)
@@ -255,14 +265,50 @@ if(Q2):
     plt.figure(8)
     plt.plot(x2_hat)
     plt.plot(x1)
-        
+
+
+Linewdth = 1
+fig, axis = plt.subplots(1, 4)
+axis[0].plot(x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
+axis[0].plot(x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
+axis[0].fill_between(np.arange(0,1000,1),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
+axis[0].plot(x1_true,color="royalblue",label="True value", linewidth=Linewdth)
+axis[0].plot(x1,color="blue",label="Filtered Data", linewidth=Linewdth)
+axis[0].legend()
+axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
+axis[0].set_xlabel('Time [s]')
+axis[0].set_ylabel('Height [m]')
+axis[0].set_title("X1")
+  
+
+
+axis[1].plot(x2sigmaplus,color="pink", linewidth=Linewdth)
+axis[1].plot(x2sigmamoins,color="pink", linewidth=Linewdth)
+axis[1].fill_between(np.arange(0,1000,1),y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
+axis[1].plot(x2_true,color="indianred",label="True value", linewidth=Linewdth)
+axis[1].plot(x2,color="red",label="Filtered Data", linewidth=Linewdth)
+axis[1].legend()
+axis[1].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
+axis[1].set_xlabel('Time [s]')
+axis[1].set_ylabel('Height [m]')
+axis[1].set_title("X2")
+  
+
+axis[2].plot(x1) 
+axis[2].set_title("Tangent Function")
+  
+
+axis[3].plot(x2)
+axis[3].set_title("Tanh Function")
+
 
 plt.show()
 
 ###-------------2.2
+
 def f(xk,uk,ind):
     if ind == 1:
-        return np.array([math.sqrt(xk[0][0])+uk,math.sqrt(xk[0][0])-math.sqrt(xk[1][0])]).reshape((2,1))
+        return np.array([-math.sqrt(xk[0][0])+uk,math.sqrt(xk[0][0])-math.sqrt(xk[1][0])]).reshape((2,1))
     elif ind == 4:
         return f(xk+(h)*f(xk,uk,ind-1),uk,1)
     else:
@@ -327,7 +373,10 @@ for j in range(0,k):
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
-
+    x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
+    x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
+    x2sigmaplus[j]=x2_hat[j]+1.96*(Ptildeapprox[1][1])**(1/2)
+    x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
     
     
     
