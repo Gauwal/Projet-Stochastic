@@ -141,8 +141,8 @@ for i in range(0,k):
         x2[i]=np.random.normal(muk[1],Pk[1][1])
     x1sigmaplus[i]=x1[i]+1.96*(Pk[0][0])**(1/2)
     x1sigmamoins[i]=x1[i]-1.96*(Pk[0][0])**(1/2)
-    x2sigmaplus[i]=x2[i]+1.96*(Pk[0][0])**(1/2)
-    x2sigmamoins[i]=x2[i]-1.96*(Pk[0][0])**(1/2)
+    x2sigmaplus[i]=x2[i]+1.96*(Pk[1][1])**(1/2)
+    x2sigmamoins[i]=x2[i]-1.96*(Pk[1][1])**(1/2)
 
 
 
@@ -178,10 +178,15 @@ axis[1].set_title("X2 Kf")
 
 axis[2].plot(x1) 
 axis[2].set_title("Tangent Function")
-  
 
-axis[3].plot(x2)
-axis[3].set_title("Tanh Function")
+
+axis[3].plot(np.arange(0,1000,1)*(h),x1sigmaplus-x1sigmamoins,color="blue", linewidth=Linewdth, label="95% Ci of x1")
+axis[3].plot(np.arange(0,1000,1)*h,x2sigmaplus-x2sigmamoins,color="red", linewidth=Linewdth, label="95% Ci of x1")
+axis[3].legend()
+axis[3].set_aspect(1.0/axis[3].get_data_ratio(), adjustable='box')
+axis[3].set_xlabel('Time [s]')
+axis[3].set_ylabel('Width [m]')
+axis[3].set_title("95% Confidence Intervals")
 
 
 plt.show()
@@ -338,8 +343,13 @@ axis[2].plot(x1)
 axis[2].set_title("Tangent Function")
   
 
-axis[3].plot(x2)
-axis[3].set_title("Tanh Function")
+axis[3].plot(np.arange(0,1000,1)*(h),x1sigmaplus-x1sigmamoins,color="blue", linewidth=Linewdth, label="95% Ci of x1")
+axis[3].plot(np.arange(0,1000,1)*h,x2sigmaplus-x2sigmamoins,color="red", linewidth=Linewdth, label="95% Ci of x1")
+axis[3].legend()
+axis[3].set_aspect(1.0/axis[3].get_data_ratio(), adjustable='box')
+axis[3].set_xlabel('Time [s]')
+axis[3].set_ylabel('Width [m]')
+axis[3].set_title("95% Confidence Intervals")
 
 
 plt.show()
@@ -451,8 +461,13 @@ axis[2].plot(x1)
 axis[2].set_title("Tangent Function")
   
 
-axis[3].plot(x2)
-axis[3].set_title("Tanh Function")
+axis[3].plot(np.arange(0,1000,1)*(h),x1sigmaplus-x1sigmamoins,color="blue", linewidth=Linewdth, label="95% Ci of x1")
+axis[3].plot(np.arange(0,1000,1)*h,x2sigmaplus-x2sigmamoins,color="red", linewidth=Linewdth, label="95% Ci of x1")
+axis[3].legend()
+axis[3].set_aspect(1.0/axis[3].get_data_ratio(), adjustable='box')
+axis[3].set_xlabel('Time [s]')
+axis[3].set_ylabel('Width [m]')
+axis[3].set_title("95% Confidence Intervals")
 
 
 plt.show()    
