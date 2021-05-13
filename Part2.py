@@ -56,6 +56,58 @@ for line in lines:
     i+=1
 file4.close()
 
+#x1_true_nonlin
+file4 = open('True_state_x1_nonlinear_case.txt', "r")
+lines = file4.readlines()
+i=0
+x1_true_nl=np.zeros(len(lines)-1)
+for line in lines:
+    if(i==0):
+        pass
+    else:
+        x1_true_nl[i-1]=float(line.strip().split(" ")[0])
+    i+=1
+file4.close()
+
+#x2_true_nonlin
+file5 = open('True_state_x2_nonlinear_case.txt', "r")
+lines = file5.readlines()
+i=0
+x2_true_nl=np.zeros(len(lines)-1)
+for line in lines:
+    if(i==0):
+        pass
+    else:
+        x2_true_nl[i-1]=float(line.strip().split(" ")[0])
+    i+=1
+file5.close()
+
+#Input nl
+file6 = open('Input_nonlinear_case.txt', "r")
+lines = file6.readlines()
+i=0
+u_nl=np.zeros(len(lines)-1)
+for line in lines:
+    if(i==0):
+        pass
+    else:
+        u_nl[i-1]=float(line.strip().split(" ")[0])
+    i+=1
+file6.close()
+
+#Lecture de y_nl
+file7 = open('Measured_output_nonlinear_case.txt', "r")
+lines = file7.readlines()
+i=0
+y_nl=np.zeros(len(lines)-1)
+for line in lines:
+    if(i==0):
+        pass
+    else:
+        y_nl[i-1]=float(line.strip().split(" ")[0])
+    i+=1
+file7.close()
+
 #Sampling Period
 h=0.1
 
@@ -352,6 +404,12 @@ axis[3].set_title("95% Confidence Intervals")
 plt.show()
 
 ###-------------2.2
+
+
+x1_true=x1_true_nl
+x2_true=x2_true_nl
+y=y_nl
+u=u_nl
 
 def f(xk,uk,ind):
     if ind == 1:
