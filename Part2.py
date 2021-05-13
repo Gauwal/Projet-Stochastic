@@ -93,7 +93,8 @@ def K_k(Ptilde,C,R):
 
 #Calcul mu_k
 def mu_k(mutilde,Kk,yk,C):
-    return mutilde+np.dot(Kk,(yk-np.dot(C,mutilde)))
+ #   return np.dot(C,mutilde)
+    return mutilde+Kk*(yk-np.dot(C,mutilde))
 
 #Pk = (Inx − KkC)P˜k
 def P_k(Inx,Kk,C,Ptilde):
@@ -112,6 +113,9 @@ for i in range(0,k):
         mutilde=mu_tilde(A,B,mukprev,ucurrent)
         Ptilde=P_tilde(A,Q,Pprev)
         Kk=K_k(Ptilde,C,R)
+        #print("Kk",Kk)
+        #print("Azer",(yk-np.dot(C,mutilde)))
+        #print("Kk",Kk*(yk-np.dot(C,mutilde)))
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
@@ -182,8 +186,8 @@ ytilde=np.array(np.zeros((N,1)))
 x_hat=np.array(np.zeros((N,2,1)))
 x1_hat=np.zeros(len(y))
 x2_hat=np.zeros(len(y))
-print("x1_hat_prev",x1_hat_prev.shape)
-for j in range(0,1000):
+
+for j in range(0,k):
     ucurrent=u[j]
     yk=y[j]
     for i in range(0,N):
@@ -195,12 +199,17 @@ for j in range(0,1000):
             x1_hat_prev[i][0]=x_hat[i][0][0]
             x2_hat_prev[i][0]=x_hat[i][1][0]
     
-        x_hat_prev=np.array([x1_hat_prev[i][0],x2_hat_prev[i][0]])
+        x_hat_prev=np.array([[x1_hat_prev[i][0]],[x2_hat_prev[i][0]]])
         x_hat_prev.shape=(2,1)
         #print(xtilde[:][:][i].shape)
-        xtilde[i][:][:]=A@x_hat_prev+B*ucurrent   
-        ytilde[i][:]=C@xtilde[i][:][:]
-        #print("x",xtilde[i][:][:].shape)
+        w1=np.random.normal(0,Q[0][0])
+        w2=np.random.normal(0,Q[1][1])
+        
+        w=[[np.random.normal(0,Q[0][0])],[np.random.normal(0,Q[0][0])]]
+        v=np.random.normal(0,0.0125)
+        xtilde[i][:][:]=A@x_hat_prev+B*ucurrent+w 
+        ytilde[i][:]=C@xtilde[i][:][:]+v
+        #print("xtilde",xtilde[i][:][:],"i",i)
         #print("C",C.shape)
         #print(ytilde[i][:].shape)
         
@@ -210,27 +219,32 @@ for j in range(0,1000):
     covxtilde12=(1/(N-2))*np.sum([(xtilde[n][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))*(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)])) for n in range(0,N)])
     varxtilde1=(1/(N-2))*np.sum([(xtilde[n][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))*(xtilde[n][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)])) for n in range(0,N)])
     varxtilde2=(1/(N-2))*np.sum([(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)]))*(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)])) for n in range(0,N)])
-
+    
     Ptildeapprox=np.array([varxtilde1,covxtilde12,covxtilde12,varxtilde2]).reshape((2,2))
+   # print(Ptildeapprox)
+    #print(xtilde[1][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))
+    
     #print(Ptildeapprox)
 
     Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
     for i in range(0,N):
         x_hat[i][:][:]=xtilde[i][:][:]+Kkapprox*(yk-ytilde[i][:])
-    
+        #print("hat",x_hat[i][:][:],"i",i)
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
 
 plt.figure(6)
 plt.plot(x1_hat)
+plt.plot(x1)
 plt.figure(7)
 plt.plot(x2_hat)
+
 plt.show()
 
 ###2.2
 
-for j in range(0,1000):
+for j in range(0,k):
     ucurrent=u[j]
     yk=y[j]
     for i in range(0,N):
@@ -242,12 +256,17 @@ for j in range(0,1000):
             x1_hat_prev[i][0]=x_hat[i][0][0]
             x2_hat_prev[i][0]=x_hat[i][1][0]
     
-        x_hat_prev=np.array([x1_hat_prev[i][0],x2_hat_prev[i][0]])
+        x_hat_prev=np.array([[x1_hat_prev[i][0]],[x2_hat_prev[i][0]]])
         x_hat_prev.shape=(2,1)
         #print(xtilde[:][:][i].shape)
-        xtilde[i][:][:]=A@x_hat_prev+B*ucurrent   
-        ytilde[i][:]=C@xtilde[i][:][:]
-        #print("x",xtilde[i][:][:].shape)
+        w1=np.random.normal(0,Q[0][0])
+        w2=np.random.normal(0,Q[1][1])
+        
+        w=[[np.random.normal(0,Q[0][0])],[np.random.normal(0,Q[0][0])]]
+        v=np.random.normal(0,0.0125)
+        xtilde[i][:][:]=A@x_hat_prev+B*ucurrent+w 
+        ytilde[i][:]=C@xtilde[i][:][:]+v
+        #print("xtilde",xtilde[i][:][:],"i",i)
         #print("C",C.shape)
         #print(ytilde[i][:].shape)
         
@@ -257,14 +276,17 @@ for j in range(0,1000):
     covxtilde12=(1/(N-2))*np.sum([(xtilde[n][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))*(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)])) for n in range(0,N)])
     varxtilde1=(1/(N-2))*np.sum([(xtilde[n][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))*(xtilde[n][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)])) for n in range(0,N)])
     varxtilde2=(1/(N-2))*np.sum([(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)]))*(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)])) for n in range(0,N)])
-
+    
     Ptildeapprox=np.array([varxtilde1,covxtilde12,covxtilde12,varxtilde2]).reshape((2,2))
+   # print(Ptildeapprox)
+    #print(xtilde[1][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))
+    
     #print(Ptildeapprox)
 
     Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
     for i in range(0,N):
         x_hat[i][:][:]=xtilde[i][:][:]+Kkapprox*(yk-ytilde[i][:])
-    
+        #print("hat",x_hat[i][:][:],"i",i)
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
