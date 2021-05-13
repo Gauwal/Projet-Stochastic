@@ -242,10 +242,20 @@ plt.plot(x2_hat)
 
 plt.show()
 
-###2.2
+###-------------2.2
+def f(xk,uk,ind):
+    if ind == 1:
+        return np.array([math.sqrt(xk[0][0])+uk,math.sqrt(xk[0][0])-math.sqrt(xk[1][0])]).reshape((2,1))
+    elif ind == 4:
+        return f(xk+(h)*f(xk,uk,ind-1),uk,1)
+    else:
+        return f(xk+(h/2)*f(xk,uk,ind-1),uk,1)
 
+uprev=u[0]
+h=0.1
 for j in range(0,k):
-    ucurrent=u[j]
+    if j>0 :
+        uprev=u[j-1]
     yk=y[j]
     for i in range(0,N):
 
@@ -264,8 +274,8 @@ for j in range(0,k):
         
         w=[[np.random.normal(0,Q[0][0])],[np.random.normal(0,Q[0][0])]]
         v=np.random.normal(0,0.0125)
-        xtilde[i][:][:]=A@x_hat_prev+B*ucurrent+w 
-        ytilde[i][:]=C@xtilde[i][:][:]+v
+        xtilde[i][:][:]=x_hat_prev+(h/6)*(f(x_hat_prev,uprev,1)+2*f(x_hat_prev,uprev,2)+2*f(x_hat_prev,uprev,3)+f(x_hat_prev,uprev,4))+w 
+        ytilde[i][:]=xtilde[i][1][0]+v
         #print("xtilde",xtilde[i][:][:],"i",i)
         #print("C",C.shape)
         #print(ytilde[i][:].shape)
