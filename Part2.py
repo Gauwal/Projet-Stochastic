@@ -112,6 +112,8 @@ x1sigmamoins=np.zeros(len(y))
 x2sigmaplus=np.zeros(len(y))
 x2sigmamoins=np.zeros(len(y))
 x1rmds=np.zeros(len(y))
+x2rmds=np.zeros(len(y))
+
 for i in range(0,k):
     ucurrent=u[i]
     yk=y[i]
@@ -145,7 +147,8 @@ for i in range(0,k):
     x2sigmaplus[i]=x2[i]+1.96*(Pk[1][1])**(1/2)
     x2sigmamoins[i]=x2[i]-1.96*(Pk[1][1])**(1/2)
     x1rmds[i]=((x1[i]-x1_true[i])**(2))**(1/2)
-plt.plot(x1rmds)
+    x2rmds[i]=((x2[i]-x2_true[i])**(2))**(1/2)
+
 
 
 #a=True
@@ -178,8 +181,13 @@ axis[1].set_ylabel('Height [m]')
 axis[1].set_title("X2 Kf")
   
 
-axis[2].plot(x1) 
-axis[2].set_title("Tangent Function")
+axis[2].plot(x1rmds,color="blue",label="RMSD x1", linewidth=Linewdth)
+axis[2].plot(x2rmds,color="red",label="RMSD x2", linewidth=Linewdth)
+axis[2].legend()
+axis[2].set_aspect(1.0/axis[2].get_data_ratio(), adjustable='box')
+axis[2].set_xlabel('Time [s]')
+axis[2].set_ylabel('RMSD [m]')
+axis[2].set_title("RMSD")
 
 
 axis[3].plot(np.arange(0,1000,1)*(h),x1sigmaplus-x1sigmamoins,color="blue", linewidth=Linewdth, label="95% Ci of x1")
@@ -341,8 +349,13 @@ axis[1].set_ylabel('Height [m]')
 axis[1].set_title("X2 linear EnKf")
   
 
-axis[2].plot(x1) 
-axis[2].set_title("Tangent Function")
+axis[2].plot(x1rmds,color="blue",label="RMSD x1", linewidth=Linewdth)
+axis[2].plot(x2rmds,color="red",label="RMSD x2", linewidth=Linewdth)
+axis[2].legend()
+axis[2].set_aspect(1.0/axis[2].get_data_ratio(), adjustable='box')
+axis[2].set_xlabel('Time [s]')
+axis[2].set_ylabel('RMSD [m]')
+axis[2].set_title("RMSD")
   
 
 axis[3].plot(np.arange(0,1000,1)*(h),x1sigmaplus-x1sigmamoins,color="blue", linewidth=Linewdth, label="95% Ci of x1")
@@ -360,7 +373,7 @@ plt.show()
 
 def f(xk,uk,ind):
     if ind == 1:
-        return np.array([-math.sqrt(xk[0][0])+uk,math.sqrt(xk[0][0])-math.sqrt(xk[1][0])]).reshape((2,1))
+        return np.array([-math.sqrt(abs(xk[0][0]))+uk,math.sqrt(abs(xk[0][0]))-math.sqrt(abs(xk[1][0]))]).reshape((2,1))
     elif ind == 4:
         return f(xk+(h)*f(xk,uk,ind-1),uk,1)
     else:
@@ -459,8 +472,13 @@ axis[1].set_ylabel('Height [m]')
 axis[1].set_title("X2 non-linear EnKf")
   
 
-axis[2].plot(x1) 
-axis[2].set_title("Tangent Function")
+axis[2].plot(x1rmds,color="blue",label="RMSD x1", linewidth=Linewdth)
+axis[2].plot(x2rmds,color="red",label="RMSD x2", linewidth=Linewdth)
+axis[2].legend()
+axis[2].set_aspect(1.0/axis[2].get_data_ratio(), adjustable='box')
+axis[2].set_xlabel('Time [s]')
+axis[2].set_ylabel('RMSD [m]')
+axis[2].set_title("RMSD")
   
 
 axis[3].plot(np.arange(0,1000,1)*(h),x1sigmaplus-x1sigmamoins,color="blue", linewidth=Linewdth, label="95% Ci of x1")
