@@ -226,7 +226,7 @@ def K_k_approx(Papprox,C,R):
     
     
 
-N=30
+N=100
 x1_hat_prev=np.array(np.zeros((N,1)))
 x2_hat_prev=np.array(np.zeros((N,1)))
 xtilde=np.array(np.zeros((N,2,1)))
@@ -240,6 +240,8 @@ x2rmdsmoy=np.zeros(k)
 for j in range(0,k):
     ucurrent=u[j]
     yk=y[j]
+    if j%10==0:
+        print(j,k)
     for i in range(0,N):
 
         if j==0:
