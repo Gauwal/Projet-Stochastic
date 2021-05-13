@@ -56,6 +56,9 @@ for line in lines:
     i+=1
 file4.close()
 
+#Sampling Period
+h=0.1
+
 
 
 #Matrice of Kalman filter
@@ -144,7 +147,44 @@ for i in range(0,k):
 
 
 #a=True
-a=False    
+a=False
+
+Linewdth = 1
+fig, axis = plt.subplots(1, 4)
+axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
+axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
+axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
+axis[0].legend()
+axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
+axis[0].set_xlabel('Time [s]')
+axis[0].set_ylabel('Height [m]')
+axis[0].set_title("X1 Kf")
+  
+
+
+axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
+axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
+axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
+axis[1].legend()
+axis[1].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
+axis[1].set_xlabel('Time [s]')
+axis[1].set_ylabel('Height [m]')
+axis[1].set_title("X2 Kf")
+  
+
+axis[2].plot(x1) 
+axis[2].set_title("Tangent Function")
+  
+
+axis[3].plot(x2)
+axis[3].set_title("Tanh Function")
+
+
+plt.show()
 
 
 
@@ -227,10 +267,10 @@ for j in range(0,k):
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
 
-    #x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
-    #x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
-    #x2sigmaplus[j]=x2_hat[j]+1.96*(Ptildeapprox[1][1])**(1/2)
-    #x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
+    x1sigmaplus[j]=x1_hat[j]+1.96*(Ptildeapprox[0][0])**(1/2)
+    x1sigmamoins[j]=x1_hat[j]-1.96*(Ptildeapprox[0][0])**(1/2)
+    x2sigmaplus[j]=x2_hat[j]+1.96*(Ptildeapprox[1][1])**(1/2)
+    x2sigmamoins[j]=x2_hat[j]-1.96*(Ptildeapprox[1][1])**(1/2)
 
 
 
@@ -269,29 +309,29 @@ if(Q2):
 
 Linewdth = 1
 fig, axis = plt.subplots(1, 4)
-axis[0].plot(x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
-axis[0].plot(x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
-axis[0].fill_between(np.arange(0,1000,1),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
-axis[0].plot(x1_true,color="royalblue",label="True value", linewidth=Linewdth)
-axis[0].plot(x1,color="blue",label="Filtered Data", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
+axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
+axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
 axis[0].legend()
 axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
 axis[0].set_xlabel('Time [s]')
 axis[0].set_ylabel('Height [m]')
-axis[0].set_title("X1")
+axis[0].set_title("X1 linear EnKf")
   
 
 
-axis[1].plot(x2sigmaplus,color="pink", linewidth=Linewdth)
-axis[1].plot(x2sigmamoins,color="pink", linewidth=Linewdth)
-axis[1].fill_between(np.arange(0,1000,1),y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
-axis[1].plot(x2_true,color="indianred",label="True value", linewidth=Linewdth)
-axis[1].plot(x2,color="red",label="Filtered Data", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
+axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
+axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
 axis[1].legend()
 axis[1].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
 axis[1].set_xlabel('Time [s]')
 axis[1].set_ylabel('Height [m]')
-axis[1].set_title("X2")
+axis[1].set_title("X2 linear EnKf")
   
 
 axis[2].plot(x1) 
@@ -315,7 +355,7 @@ def f(xk,uk,ind):
         return f(xk+(h/2)*f(xk,uk,ind-1),uk,1)
 
 uprev=u[0]
-h=0.1
+
 for j in range(0,k):
     if j>0 :
         uprev=u[j-1]
@@ -380,7 +420,42 @@ for j in range(0,k):
     
     
     
-    
+Linewdth = 1
+fig, axis = plt.subplots(1, 4)
+axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
+axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
+axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
+axis[0].legend()
+axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
+axis[0].set_xlabel('Time [s]')
+axis[0].set_ylabel('Height [m]')
+axis[0].set_title("X1 non-linear EnKf")
+  
+
+
+axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
+axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
+axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
+axis[1].legend()
+axis[1].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
+axis[1].set_xlabel('Time [s]')
+axis[1].set_ylabel('Height [m]')
+axis[1].set_title("X2 non-linear EnKf")
+  
+
+axis[2].plot(x1) 
+axis[2].set_title("Tangent Function")
+  
+
+axis[3].plot(x2)
+axis[3].set_title("Tanh Function")
+
+
+plt.show()    
     
     
     
