@@ -44,7 +44,7 @@ for line in lines:
 file3.close()
 
 #x2_true
-file4 = open('True_state_x1_linear_case.txt', "r")
+file4 = open('True_state_x2_linear_case.txt', "r")
 lines = file4.readlines()
 i=0
 x2_true=np.zeros(len(lines)-1)
@@ -111,8 +111,6 @@ file7.close()
 #Sampling Period
 h=0.1
 
-
-
 #Matrice of Kalman filter
 A=np.array([[0.9512,0],[0.0476,0.9512]])
 A.shape=(2,2)
@@ -148,7 +146,6 @@ def K_k(Ptilde,C,R):
 
 #Calcul mu_k
 def mu_k(mutilde,Kk,yk,C):
- #   return np.dot(C,mutilde)
     return mutilde+Kk*(yk-np.dot(C,mutilde))
 
 #Pk = (Inx − KkC)P˜k
@@ -175,9 +172,6 @@ for i in range(0,k):
         mutilde=mu_tilde(A,B,mukprev,ucurrent)
         Ptilde=P_tilde(A,Q,Pprev)
         Kk=K_k(Ptilde,C,R)
-        #print("Kk",Kk)
-        #print("Azer",(yk-np.dot(C,mutilde)))
-        #print("Kk",Kk*(yk-np.dot(C,mutilde)))
         muk=mu_k(mutilde,Kk,yk,C)
         Pk=P_k(Inx,Kk,C,Ptilde)
         x1[i]=np.random.normal(muk[0],Pk[0][0])
@@ -264,11 +258,11 @@ def sample_mean(zer):
         sum=sum+zer[i]
     return sum/len(zer)
 
-#faut Rajouter le bruit
+
 def x_tilde(A,B,ucurrent,x1_hat_i_kprev,x2_hat_i_kprev):
     return A@[x1_hat_i_kprev,x2_hat_i_kprev]+B@ucurrent
 
-#faut Rajouter le bruit
+
 def y_tilde(C,xtilde):
     return C@xtilde
 
@@ -303,7 +297,7 @@ for j in range(0,k):
     
         x_hat_prev=np.array([[x1_hat_prev[i][0]],[x2_hat_prev[i][0]]])
         x_hat_prev.shape=(2,1)
-        #print(xtilde[:][:][i].shape)
+
         w1=np.random.normal(0,Q[0][0])
         w2=np.random.normal(0,Q[1][1])
         
@@ -311,9 +305,6 @@ for j in range(0,k):
         v=np.random.normal(0,0.0125)
         xtilde[i][:][:]=A@x_hat_prev+B*ucurrent+w 
         ytilde[i][:]=C@xtilde[i][:][:]+v
-        #print("xtilde",xtilde[i][:][:],"i",i)
-        #print("C",C.shape)
-        #print(ytilde[i][:].shape)
         
         
     #N-2 because our N-1 = N of the formula
@@ -323,15 +314,11 @@ for j in range(0,k):
     varxtilde2=(1/(N-2))*np.sum([(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)]))*(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)])) for n in range(0,N)])
     
     Ptildeapprox=np.array([varxtilde1,covxtilde12,covxtilde12,varxtilde2]).reshape((2,2))
-   # print(Ptildeapprox)
-    #print(xtilde[1][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))
-    
-    #print(Ptildeapprox)
+
 
     Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
     for i in range(0,N):
         x_hat[i][:][:]=xtilde[i][:][:]+Kkapprox*(yk-ytilde[i][:])
-        #print("hat",x_hat[i][:][:],"i",i)
     x1_hat[j]=np.mean([(x_hat[i][0][0]) for i in range(0,N)])
     x2_hat[j]=np.mean([(x_hat[i][1][0]) for i in range(0,N)])
 
@@ -360,7 +347,7 @@ axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewid
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
 axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
 axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
-axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1_hat,color="blue",label="Filtered Data", linewidth=Linewdth)
 axis[0].legend()
 axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
 axis[0].set_xlabel('Time [s]')
@@ -373,7 +360,7 @@ axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
 axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
 axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
 axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
-axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2_hat,color="red",label="Filtered Data", linewidth=Linewdth)
 axis[1].legend()
 axis[1].set_aspect(1.0/axis[1].get_data_ratio(), adjustable='box')
 axis[1].set_xlabel('Time [s]')
@@ -437,27 +424,13 @@ for j in range(0,k):
     
         x_hat_prev=np.array([[x1_hat_prev[i][0]],[x2_hat_prev[i][0]]])
         x_hat_prev.shape=(2,1)
-        #print(xtilde[:][:][i].shape)
         w1=np.random.normal(0,Q[0][0])
         w2=np.random.normal(0,Q[1][1])
         
-    #print("x1_hat_prev",x1_hat_prev.shape)
-    #x_hat_prev=np.array([[x1_hat_prev],[x2_hat_prev]])
-    #x_hat_prev.shape=(2,1,3)
-    #print("x_hat_prev",x_hat_prev.shape)
-    #print("x_hat_prev",x_hat_prev)    
-    #xtilde=A@x_hat_prev+B@u    #+bruit
-    #ytilde=C@xtilde            #+bruit
-    #Ptildeapprox=np.cov(xtilde)
-    #Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
-    #x_hat=xtilde+Kkapprox*(yk-ytilde)
         w=[[np.random.normal(0,Q[0][0])],[np.random.normal(0,Q[0][0])]]
         v=np.random.normal(0,0.0125)
         xtilde[i][:][:]=x_hat_prev+(h/6)*(f(x_hat_prev,uprev,1)+2*f(x_hat_prev,uprev,2)+2*f(x_hat_prev,uprev,3)+f(x_hat_prev,uprev,4))+w 
         ytilde[i][:]=xtilde[i][1][0]+v
-        #print("xtilde",xtilde[i][:][:],"i",i)
-        #print("C",C.shape)
-        #print(ytilde[i][:].shape)
         
         
     #N-2 because our N-1 = N of the formula
@@ -467,15 +440,9 @@ for j in range(0,k):
     varxtilde2=(1/(N-2))*np.sum([(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)]))*(xtilde[n][1][0]-np.mean([(xtilde[m][1][0]) for m in range(0,N)])) for n in range(0,N)])
     
     Ptildeapprox=np.array([varxtilde1,covxtilde12,covxtilde12,varxtilde2]).reshape((2,2))
-   # print(Ptildeapprox)
-    #print(xtilde[1][0][0]-np.mean([(xtilde[m][0][0]) for m in range(0,N)]))
-    
-    #print(Ptildeapprox)
-
     Kkapprox=Ptildeapprox@C.T*(1/(C@Ptildeapprox@C.T+R))
     for i in range(0,N):
         x_hat[i][:][:]=xtilde[i][:][:]+Kkapprox*(yk-ytilde[i][:])
-        #print("hat",x_hat[i][:][:],"i",i)
         
         
         
@@ -507,7 +474,7 @@ axis[0].plot(np.arange(0,1000,1)*(h),x1sigmaplus,color="lightsteelblue", linewid
 axis[0].plot(np.arange(0,1000,1)*(h),x1sigmamoins,color="lightsteelblue", linewidth=Linewdth)
 axis[0].fill_between(np.arange(0,1000,1)*(h),y1=x1sigmaplus, y2=x1sigmamoins,color="lightsteelblue",label="95% CI")
 axis[0].plot(np.arange(0,1000,1)*(h),x1_true,color="royalblue",label="True value", linewidth=Linewdth)
-axis[0].plot(np.arange(0,1000,1)*(h),x1,color="blue",label="Filtered Data", linewidth=Linewdth)
+axis[0].plot(np.arange(0,1000,1)*(h),x1_hat,color="blue",label="Filtered Data", linewidth=Linewdth)
 axis[0].legend()
 axis[0].set_aspect(1.0/axis[0].get_data_ratio(), adjustable='box')
 axis[0].set_xlabel('Time [s]')
@@ -520,7 +487,7 @@ axis[1].plot(np.arange(0,1000,1)*h,x2sigmaplus,color="pink", linewidth=Linewdth)
 axis[1].plot(np.arange(0,1000,1)*h,x2sigmamoins,color="pink", linewidth=Linewdth)
 axis[1].fill_between(np.arange(0,1000,1)*h,y1=x2sigmaplus, y2=x2sigmamoins,color="pink",label="95% CI")
 axis[1].plot(np.arange(0,1000,1)*h,x2_true,color="indianred",label="True value", linewidth=Linewdth)
-axis[1].plot(np.arange(0,1000,1)*h,x2,color="red",label="Filtered Data", linewidth=Linewdth)
+axis[1].plot(np.arange(0,1000,1)*h,x2_hat,color="red",label="Filtered Data", linewidth=Linewdth)
 axis[1].legend()
 axis[1].set_aspect(1.0/axis[1].get_data_ratio(), adjustable='box')
 axis[1].set_xlabel('Time [s]')
